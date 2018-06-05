@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<blowtorch xmlversion="2">
+  <plugins>
+    <plugin name="Shindo quest and campaign helper" id="909">
+      <author>Shindo</author>
+      <description><![CDATA[
+        <html>
+          <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <title>Shindo's Quest & Campaign Plugin</title>
+            <style type="text/css">
+              body {
+              color: #999;
+              }
+            </style>
+          </head>
+
+          <body>
+            <h3>Quest and Campaign Helper summary
+            </h3>
+            <p>This plugin compiles a list of areas and their keywords for moving to them.</p>
+            <p>It tracks where your next campaign target is, strips the name down for 
+              targeting purposes and checks if you are already in the area.</p>
+            <p>When you start a quest it gets the area and mobname and stores them for moving 
+              and tracking them down.</p>
+          </body>
+        </html>
+        ]]>
+      </description>
+      <windows />
+      <triggers >
+        <trigger title="questStatus" pattern="%comm.quest" sequence="1">
+          <script function="updateQStatus" fireWhen="always" />
+        </trigger>
+      </triggers>
+      <timers />
+      <options />
+      <script name="mainqandc" execute="true"><![CDATA[
+        Plugin_Dir = "/Shindo_lua"
+        dofile(GetPluginInstallDirectory()..Plugin_Dir.."/QandC_backend.lua")
+        ]]>
+      </script>
+    </plugin>
+  </plugins>
+</blowtorch>
