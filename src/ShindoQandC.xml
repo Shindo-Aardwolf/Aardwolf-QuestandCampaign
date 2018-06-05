@@ -23,6 +23,15 @@
               targeting purposes and checks if you are already in the area.</p>
             <p>When you start a quest it gets the area and mobname and stores them for moving 
               and tracking them down.</p>
+            <ul>These are the commands to execute the functions in this plugin
+              <li><b>QST</b> This function uses the gmcp data sent when quest request is executed 
+                and sets an alias TARGET, in blowtorch, and then attempts to move to the area of the
+                quest.</li>
+              <li><b>QRep</b> This function reports the current status of your quest.</li>
+              <li><b>UIDLookUp</b> this function returns the uid of the room set as the start room. It 
+                requires the Longname, as reported by areas keywords and also returned in the gmcp data
+                for quests.</li>
+            </ul>
           </body>
         </html>
         ]]>
