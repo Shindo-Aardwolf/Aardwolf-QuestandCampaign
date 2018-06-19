@@ -54,6 +54,7 @@ function SetTarget()
       SendToServer(".MapperGoto "..tonumber(AreaData[5]))
       SendToServer(".loadset default")
     end
+    SendToServer(".MapperPopulateRoomListArea "..AreaData[1].." "..QuestInfo.room)
   else
     SendToServer("echo You are not on a quest.")
     SendToServer(".loadset default")
