@@ -51,7 +51,11 @@
         <trigger title="end1" pattern="$(Note: One or more target names in this campaign might be slightly scrambled.)$" regexp="true" enabled="false">
           <gag />
         </trigger>
-        <trigger title="end2" pattern="^(You may take a campaign at this level.|You will have to level before you can go on another campaign.)$" regexp="true" enabled="false">
+        <trigger title="end2" pattern="^(You are not currently on a campaign.|You may take a campaign at this level.|You will have to level before you can go on another campaign.)$" regexp="true" enabled="false">
+          <script function="endCaptureCP" fireWhen="always" />
+          <gag />
+        </trigger>
+        <trigger title="end3" pattern="^You (cannot|may) take another campaign(.*)\.$" regexp="true" enabled="false">
           <script function="endCaptureCP" fireWhen="always" />
           <gag />
         </trigger>

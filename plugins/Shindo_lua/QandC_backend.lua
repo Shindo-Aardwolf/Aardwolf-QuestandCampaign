@@ -2,6 +2,11 @@ Plugin_Dir = "/Shindo_lua"
 dofile(GetPluginInstallDirectory()..Plugin_Dir.."/Name_Cleanup.lua")
 dofile(GetPluginInstallDirectory()..Plugin_Dir.."/AreasArray.lua")
 
+local Max_Areas = 0
+local CP_Mobs_In_Area = 0
+local Current_CP_Area_Name = ""
+local Current_CP_Area_Number = 1
+
 --HELPER FUNCTIONS
 function tprint (t, indent, done)
   -- show strings differently to distinguish them from numbers
@@ -148,7 +153,7 @@ function processTargetCP(name,line,map)
     --[[
     PluginSupports("Campaign Tracker", "processTarget", name, line, map)
     Note("Processing Target.\n")
-    --]]
+    ]]
   end
 end
 
@@ -173,13 +178,15 @@ function resetTrackerCP()
 	EnableTrigger("grabberCP",true)
 	EnableTrigger("end1",true)
 	EnableTrigger("end2",true)
+	EnableTrigger("end3",true)
 end
 
 function endCaptureCP(name,line,map)
   EnableTrigger("end1",false)
   EnableTrigger("end2",false)
+  EnableTrigger("end3",false)
   EnableTrigger("grabberCP",false)
-  table.sort(areas)
+  --table.sort(areas)
   --[[
   if PluginSupports("Campaign Tracker", "endCapture") then
     --build the string, add it to the tree and send it off to be drawn
@@ -195,12 +202,14 @@ function endCaptureCP(name,line,map)
     InvalidateWindowText(token:getName())
     WindowXCallS(token:getName(),"requestLayout","now")
   end -- PluginSupports
-  --]]
+  ]]
   --create a new trigger with a background highlight mod for each mob in the list.
+  --[[
   local name = "mob_%d"
   local format = string.format
   local count = 1
---[[  
+  ]]
+  --[[  
   for i,area in ipairs(areas) do
     local list = mobs[area]
     for i,mob in ipairs(list) do
@@ -214,20 +223,70 @@ function endCaptureCP(name,line,map)
       count = count + 1
     end
   end -- create trigger loop
-  --]]
+  ]]
+  for i,area in ipairs(areas) do
+    Max_Areas = i
+    Note(string.format("%s - %s%s%s\n", i, dcyan, area, nwhite))
+    local list = mobs[area]
+    for j, mob in ipairs(list) do
+      Note(string.format("  %.2s - %s%s%s\n", j, darkgreen, mob, nwhit))
+    end
+  end
 
-  tprint(mobs)
+  --tprint(mobs)
   --Note("\nEnd Capture.\n")
+end
+
+function goto_campaign_area(areanumber)
+  local CP_Area = tonumber(areanumber)
+  if CP_Area and (CP_Area > 0) and (CP_Area < Max_Areas + 1) then
+    Current_CP_Area_Number = CP_Area
+    Current_CP_Area_Name = areas[CP_Area]
+    Note(string.format("You wish to go to %s%s%s.\n",bwhit, Current_CP_Area_Name, nwhit))
+    AreaData = AreaByLongName[Current_CP_Area_Name]
+    Note("Target mobs in that area are:\n")
+    local list = mobs[areas[CP_Area]]
+    for i, mob in ipairs(list) do
+      Note(string.format("%s - %s%s%s\n", i, darkgreen, mob, nwhit))
+      CP_Mobs_In_Area = i
+    end
+    if AreaData[5] == "" then
+      SendToServer("rt "..AreaData[1])
+    else
+      SendToServer(".MapperGoto "..tonumber(AreaData[5]))
+    end
+  elseif CP_Area == nil then
+    Note("This function requires a number as input.\n")
+  elseif (CP_Area < 1) or (CP_Area > Max_Areas) then
+    Note(string.format("Please use a number between 1 and %s.\n", Max_Areas))
+  end
+end
+
+function set_campaign_area_target(targetnumber)
+  local TNumber = tonumber(targetnumber)
+  local list = mobs[areas[Current_CP_Area_Number]]
+  if TNumber == nil then
+    Note("This function requires a number as input.\n")
+  elseif (TNumber > 0) and (TNumber < CP_Mobs_In_Area + 1) then
+    SendToServer(string.format(".TARGET %s",stripname(list[TNumber],Current_CP_Area_Name)))
+    Note(string.format("Setting TARGET to %s%s%s",darkgreen, stripname(list[TNumber],Current_CP_Area_Name), nwhit))
+    SendToServer(string.format(".ht %s",stripname(list[TNumber],Current_CP_Area_Name)))
+  elseif (TNumber < 1) or (TNumber > CP_Mobs_In_Area ) then
+    Note(string.format("Please use a number between 1 and %s.\n", CP_Mobs_In_Area))
+  end
 end
 
 RegisterSpecialCommand("QST","SetTarget")
 RegisterSpecialCommand("QRep","QuestReport")
-RegisterSpecialCommand("UIDLookUp"," LookUpAreaUID")
+RegisterSpecialCommand("UIDLookUp","LookUpAreaUID")
+RegisterSpecialCommand("CPGoto","goto_campaign_area")
+RegisterSpecialCommand("CPAT","set_campaign_area_target")
 
 function OnBackgroundStartup()
   DeleteTriggerGroup("mobs")
-  EnableTrigger("end2",false)
   EnableTrigger("end1",false)
+  EnableTrigger("end2",false)
+  EnableTrigger("end3",false)
   EnableTrigger("grabberCP",false)
 end
 
