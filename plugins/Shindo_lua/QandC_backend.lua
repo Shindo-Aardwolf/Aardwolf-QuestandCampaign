@@ -226,7 +226,7 @@ function endCaptureCP(name,line,map)
   ]]
   for i,area in ipairs(areas) do
     Max_Areas = i
-    Note(string.format("%s - %s%s%s\n", i, dcyan, area, nwhite))
+    Note(string.format("%s - %s%s%s\n", i, dcyan, area, nwhit))
     local list = mobs[area]
     for j, mob in ipairs(list) do
       Note(string.format("  %.2s - %s%s%s\n", j, darkgreen, mob, nwhit))
