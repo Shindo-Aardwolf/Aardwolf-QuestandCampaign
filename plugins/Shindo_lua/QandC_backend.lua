@@ -5,6 +5,7 @@ dofile(GetPluginInstallDirectory()..Plugin_Dir.."/AreasArray.lua")
 local Max_Areas = 0
 local CP_Mobs_In_Area = 0
 local Current_CP_Area_Name = ""
+local Current_CP_Room_Name = ""
 local Current_CP_Area_Number = 1
 
 --HELPER FUNCTIONS
@@ -117,10 +118,20 @@ end
 local buffer = luajava.newInstance("com.offsetnull.bt.window.TextTree")
 
 local ansi = "\27["
+local dred = "\27[0;31m"
+local dgreen = "\27[0;32m"
+local dyellow = "\27[0;33m"
+local dblue = "\27[0;34m"
+local dmagenta = "\27[0;35m"
 local dcyan = "\27[0;36m"
-local bwhit = "\27[37;1m"
-local darkgreen = "\27[0;32m"
-local nwhit = "\27[0;37m"
+local dwhite = "\27[0;37m"
+local bred = "\27[31;1m"
+local bgreen = "\27[32;1m"
+local byellow = "\27[33;1m"
+local bblue = "\27[34;1m"
+local bmagenta = "\27[35;1m"
+local bcyan = "\27[36;1m"
+local bwhite = "\27[37;1m"
 
 local area_exists = {}
 local areas = {}
@@ -186,30 +197,27 @@ function endCaptureCP(name,line,map)
   EnableTrigger("end2",false)
   EnableTrigger("end3",false)
   EnableTrigger("grabberCP",false)
-  --table.sort(areas)
   --[[
   if PluginSupports("Campaign Tracker", "endCapture") then
     --build the string, add it to the tree and send it off to be drawn
     for i,area in ipairs(areas) do
       --get the mobs and load them up
-      buffer:addString(string.format("%s%s%s\n",bwhit,dcyan,area))
+      buffer:addString(string.format("%s%s%s\n",bwhite,dcyan,area))
       local list = mobs[area]
       for i,mob in ipairs(list) do
-        buffer:addString(string.format("%s  %s\n",darkgreen,mob))
+        buffer:addString(string.format("%s  %s\n",dgreen,mob))
       end
     end
     token:setBuffer(buffer)
     InvalidateWindowText(token:getName())
     WindowXCallS(token:getName(),"requestLayout","now")
   end -- PluginSupports
-  ]]
-  --create a new trigger with a background highlight mod for each mob in the list.
+  --]]
   --[[
+  --create a new trigger with a background highlight mod for each mob in the list.
   local name = "mob_%d"
   local format = string.format
   local count = 1
-  ]]
-  --[[  
   for i,area in ipairs(areas) do
     local list = mobs[area]
     for i,mob in ipairs(list) do
@@ -223,31 +231,35 @@ function endCaptureCP(name,line,map)
       count = count + 1
     end
   end -- create trigger loop
-  ]]
+  --]]
   for i,area in ipairs(areas) do
     Max_Areas = i
-    Note(string.format("%s - %s%s%s\n", i, dcyan, area, nwhit))
+    Note(string.format("%s - %s%s%s\n", i, dcyan, area, dwhite))
     local list = mobs[area]
     for j, mob in ipairs(list) do
-      Note(string.format("  %.2s - %s%s%s\n", j, darkgreen, mob, nwhit))
+      Note(string.format("  %.2s - %s%s%s\n", j, dgreen, mob, dwhite))
     end
   end
-
-  --tprint(mobs)
-  --Note("\nEnd Capture.\n")
 end
 
 function goto_campaign_area(areanumber)
-  local CP_Area = tonumber(areanumber)
+  local CP_Area = nil
+  if string.lower(areanumber) == "first" then
+    CP_Area = 1
+  elseif string.lower(areanumber) == "last" then
+    CP_Area = Max_Areas
+  else
+    CP_Area = tonumber(areanumber)
+  end
   if CP_Area and (CP_Area > 0) and (CP_Area < Max_Areas + 1) then
     Current_CP_Area_Number = CP_Area
     Current_CP_Area_Name = areas[CP_Area]
-    Note(string.format("You wish to go to %s%s%s.\n",bwhit, Current_CP_Area_Name, nwhit))
+    Note(string.format("You wish to go to %s%s%s.\n", bwhite, Current_CP_Area_Name, dwhite))
     AreaData = AreaByLongName[Current_CP_Area_Name]
     Note("Target mobs in that area are:\n")
     local list = mobs[areas[CP_Area]]
     for i, mob in ipairs(list) do
-      Note(string.format("%s - %s%s%s\n", i, darkgreen, mob, nwhit))
+      Note(string.format("%s - %s%s%s\n", i, dgreen, mob, dwhite))
       CP_Mobs_In_Area = i
     end
     if AreaData[5] == "" then
@@ -262,6 +274,33 @@ function goto_campaign_area(areanumber)
   end
 end
 
+function goto_campaign_room(areanumber)
+  local CP_Area = nil
+  if string.lower(areanumber) == "first" then
+    CP_Area = 1
+  elseif string.lower(areanumber) == "last" then
+    CP_Area = Max_Areas
+  else
+    CP_Area = tonumber(areanumber)
+  end
+  if CP_Area and (CP_Area > 0) and (CP_Area < Max_Areas + 1) then
+    Current_CP_Area_Number = CP_Area
+    Current_CP_Room_Name = areas[CP_Area]
+    Note(string.format("You wish to find a room called %s%s%s.\n",dcyan, Current_CP_Room_Name, dwhite))
+    Note("Target mobs in that room are:\n")
+    local list = mobs[areas[CP_Area]]
+    for i, mob in ipairs(list) do
+      Note(string.format("%s - %s%s%s\n", i, dgreen, mob, dwhite))
+      CP_Mobs_In_Area = i
+    end
+    SendToServer(string.format("MapperPopulateRoomList %s",Current_CP_Room_Name))
+  elseif CP_Area == nil then
+    Note("This function requires a number as input.\n")
+  elseif (CP_Area < 1) or (CP_Area > Max_Areas) then
+    Note(string.format("Please use a number between 1 and %s.\n", Max_Areas))
+  end
+end
+
 function set_campaign_area_target(targetnumber)
   local TNumber = tonumber(targetnumber)
   local list = mobs[areas[Current_CP_Area_Number]]
@@ -269,7 +308,7 @@ function set_campaign_area_target(targetnumber)
     Note("This function requires a number as input.\n")
   elseif (TNumber > 0) and (TNumber < CP_Mobs_In_Area + 1) then
     SendToServer(string.format(".TARGET %s",stripname(list[TNumber],Current_CP_Area_Name)))
-    Note(string.format("Setting TARGET to %s%s%s",darkgreen, stripname(list[TNumber],Current_CP_Area_Name), nwhit))
+    Note(string.format("Setting TARGET to %s%s%s",dgreen, stripname(list[TNumber],Current_CP_Area_Name), dwhite))
     SendToServer(string.format(".ht %s",stripname(list[TNumber],Current_CP_Area_Name)))
   elseif (TNumber < 1) or (TNumber > CP_Mobs_In_Area ) then
     Note(string.format("Please use a number between 1 and %s.\n", CP_Mobs_In_Area))
@@ -290,4 +329,5 @@ function OnBackgroundStartup()
   EnableTrigger("grabberCP",false)
 end
 
-Note("Auto Quest & Campaign helper installed.\n")
+Note(string.format("%sAu%sto %sQu%ses%st %s& %sCam%spaign %shel%sper %sinst%salled.%s\n",
+bred, dred, bgreen, dgreen, byellow, dyellow, bcyan, dcyan, bmagenta, dmagenta, bblue, dblue, dwhite))
