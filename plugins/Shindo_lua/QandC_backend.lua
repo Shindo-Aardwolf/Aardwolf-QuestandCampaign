@@ -8,6 +8,22 @@ local Current_CP_Area_Name = ""
 local Current_CP_Room_Name = ""
 local Current_CP_Area_Number = 1
 
+local ansi = "\27["
+local dred = "\27[0;31m"
+local dgreen = "\27[0;32m"
+local dyellow = "\27[0;33m"
+local dblue = "\27[0;34m"
+local dmagenta = "\27[0;35m"
+local dcyan = "\27[0;36m"
+local dwhite = "\27[0;37m"
+local bred = "\27[31;1m"
+local bgreen = "\27[32;1m"
+local byellow = "\27[33;1m"
+local bblue = "\27[34;1m"
+local bmagenta = "\27[35;1m"
+local bcyan = "\27[36;1m"
+local bwhite = "\27[37;1m"
+
 --HELPER FUNCTIONS
 function tprint (t, indent, done)
   -- show strings differently to distinguish them from numbers
@@ -116,22 +132,6 @@ end
 
 -- CAMPAIGN RELATED FUNCTIONS
 local buffer = luajava.newInstance("com.offsetnull.bt.window.TextTree")
-
-local ansi = "\27["
-local dred = "\27[0;31m"
-local dgreen = "\27[0;32m"
-local dyellow = "\27[0;33m"
-local dblue = "\27[0;34m"
-local dmagenta = "\27[0;35m"
-local dcyan = "\27[0;36m"
-local dwhite = "\27[0;37m"
-local bred = "\27[31;1m"
-local bgreen = "\27[32;1m"
-local byellow = "\27[33;1m"
-local bblue = "\27[34;1m"
-local bmagenta = "\27[35;1m"
-local bcyan = "\27[36;1m"
-local bwhite = "\27[37;1m"
 
 local area_exists = {}
 local areas = {}
