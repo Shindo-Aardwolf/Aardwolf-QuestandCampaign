@@ -291,9 +291,10 @@ function goto_campaign_room(areanumber)
     local list = mobs[areas[CP_Area]]
     for i, mob in ipairs(list) do
       Note(string.format("%s - %s%s%s\n", i, dgreen, mob, dwhite))
+      if i == 1 then SendToServer(".TARGET "..stripname(mob)) end
       CP_Mobs_In_Area = i
     end
-    SendToServer(string.format("MapperPopulateRoomList %s",Current_CP_Room_Name))
+    SendToServer(string.format(".MapperPopulateRoomList %s",Current_CP_Room_Name))
   elseif CP_Area == nil then
     Note("This function requires a number as input.\n")
   elseif (CP_Area < 1) or (CP_Area > Max_Areas) then
@@ -320,6 +321,7 @@ RegisterSpecialCommand("QRep","QuestReport")
 RegisterSpecialCommand("UIDLookUp","LookUpAreaUID")
 RegisterSpecialCommand("CPGoto","goto_campaign_area")
 RegisterSpecialCommand("CPAT","set_campaign_area_target")
+RegisterSpecialCommand("CPRGoto","goto_campaign_room")
 
 function OnBackgroundStartup()
   DeleteTriggerGroup("mobs")
