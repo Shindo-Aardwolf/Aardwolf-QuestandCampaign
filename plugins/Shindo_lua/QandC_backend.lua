@@ -7,6 +7,7 @@ local CP_Mobs_In_Area = 0
 local Current_CP_Area_Name = ""
 local Current_CP_Room_Name = ""
 local Current_CP_Area_Number = 1
+local version = "0.1.1"
 
 local ansi = "\27["
 local dred = "\27[0;31m"
@@ -324,6 +325,7 @@ RegisterSpecialCommand("CPAT","set_campaign_area_target")
 RegisterSpecialCommand("CPRGoto","goto_campaign_room")
 
 function OnBackgroundStartup()
+  Note(string.format("%sShindo's %sQuest & Campaign helper%s version: %s\n", bgreen, dgreen, dblue, version, dwhite))
   DeleteTriggerGroup("mobs")
   EnableTrigger("end1",false)
   EnableTrigger("end2",false)
@@ -331,5 +333,4 @@ function OnBackgroundStartup()
   EnableTrigger("grabberCP",false)
 end
 
-Note(string.format("%sAu%sto %sQu%ses%st %s& %sCam%spaign %shel%sper %sinst%salled.%s\n",
-bred, dred, bgreen, dgreen, byellow, dyellow, bcyan, dcyan, bmagenta, dmagenta, bblue, dblue, dwhite))
+Note(string.format("%sShindo's %sQuest & Campaign helper%s\n", bgreen, dgreen, dwhite))
