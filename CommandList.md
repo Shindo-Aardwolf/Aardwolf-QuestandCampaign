@@ -15,7 +15,7 @@
 ### Commands for use during a campaign
 + CPGoto - once you run **cp check**, it will generate a list, with a number, then area name and then a sublist of each of the mobs in that area. Use **.CPGoto 1**, to go to the first area listed. Alternatively you can use **.CPGoto first** or **.CPGoto last** to run to and set the first or last area in the list as the current campaign area.  
 + CPAT - use this once you are in the area that your campaign target is in. then use the number in the sublist, for example **.CPAT 1**. This will set the value of the alias we made earlier, TARGET, to the name of your current campaign mob and then run the hunt trick function with that mobs name.  
-+ CPRGoto - use this during room campaigns. it will generate a list of rooms that you can navigate using **.MapperGotoListNext** and **.MapperGotoListPrevious**  
++ CPRGoto - use this during room campaigns. **.CPRGoto first** or **.CPRGoto last** or **CPRGoto 1**  will generate a list of rooms that you can navigate using **.MapperGotoListNext** and **.MapperGotoListPrevious**  
 
 ## Suggested buttons and their content
 I suggest that you have a buttons setup to handle most of these functions, as having to type everything everytime is counter productive. You may want to create a "button set" for these and include some of the mapper functions, bound to buttons, in this set.  
