@@ -250,7 +250,7 @@ function goto_campaign_area(areanumber)
   elseif string.lower(areanumber) == "last" then
     CP_Area = Max_Areas
   else
-    CP_Area = tonumber(areanumber)
+    CP_Area = tonumber(areanumber) or 1
   end
   if CP_Area and (CP_Area > 0) and (CP_Area < Max_Areas + 1) then
     Current_CP_Area_Number = CP_Area
@@ -282,7 +282,7 @@ function goto_campaign_room(areanumber)
   elseif string.lower(areanumber) == "last" then
     CP_Area = Max_Areas
   else
-    CP_Area = tonumber(areanumber)
+    CP_Area = tonumber(areanumber) or 1
   end
   if CP_Area and (CP_Area > 0) and (CP_Area < Max_Areas + 1) then
     Current_CP_Area_Number = CP_Area

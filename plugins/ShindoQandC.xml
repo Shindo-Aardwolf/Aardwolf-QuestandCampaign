@@ -41,28 +41,37 @@
         <alias pre="^cp check$" post="/resetTrackerCP()" enabled="true" />
       </aliases>
       <triggers >
-        <trigger title="questStatus" pattern="%comm.quest" sequence="1">
+        <trigger title="questStatus"
+          pattern="%comm.quest" sequence="1">
           <script function="updateQStatus" fireWhen="always" />
         </trigger>
-        <trigger title="grabberCP" pattern="^You still have to kill \* (.+?) \((.+?)\)$" regexp="true" enabled="false">
+        <trigger title="grabberCP"
+          pattern="^You still have to kill \* (.+?) \((.+?)\)$"
+          regexp="true" enabled="false">
           <script function="processTargetCP" fireWhen="always" />
           <gag />
         </trigger>      
-        <trigger title="end1" pattern="$(Note: One or more target names in this campaign might be slightly scrambled.)$" regexp="true" enabled="false">
+        <trigger title="end1"
+          pattern="$(Note: One or more target names in this campaign might be slightly scrambled.)$"
+          regexp="true" enabled="false">
           <gag />
         </trigger>
-        <trigger title="end2" pattern="^(You are not currently on a campaign.|You may take a campaign at this level.|You will have to level before you can go on another campaign.)$" regexp="true" enabled="false">
+        <trigger title="end2"
+          pattern="^(You are not currently on a campaign.|You may take a campaign at this level.|You will have to level before you can go on another campaign.)$"
+          regexp="true" enabled="false">
           <script function="endCaptureCP" fireWhen="always" />
           <gag />
         </trigger>
-        <trigger title="end3" pattern="^You (cannot|may) take another campaign(.*)\.$" regexp="true" enabled="false">
+        <trigger title="end3"
+          pattern="^You (cannot|may) take another campaign(.*)\.$"
+          regexp="true" enabled="false">
           <script function="endCaptureCP" fireWhen="always" />
           <gag />
         </trigger>
       </triggers>
       <timers />
       <options />
-      <script name="mainqandc" execute="true"><![CDATA[
+      <script name="QandCHelper" execute="true"><![CDATA[
         Plugin_Dir = "/Shindo_lua"
         dofile(GetPluginInstallDirectory()..Plugin_Dir.."/QandC_backend.lua")
         ]]>
