@@ -60,13 +60,11 @@
           pattern="^(You are not currently on a campaign.|You may take a campaign at this level.|You will have to level before you can go on another campaign.)$"
           regexp="true" enabled="false">
           <script function="endCaptureCP" fireWhen="always" />
-          <gag />
         </trigger>
         <trigger title="end3"
           pattern="^You (cannot|may) take another campaign(.*)\.$"
           regexp="true" enabled="false">
           <script function="endCaptureCP" fireWhen="always" />
-          <gag />
         </trigger>
       </triggers>
       <timers />

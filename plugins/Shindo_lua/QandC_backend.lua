@@ -7,7 +7,7 @@ local CP_Mobs_In_Area = 0
 local Current_CP_Area_Name = ""
 local Current_CP_Room_Name = ""
 local Current_CP_Area_Number = 1
-local version = "0.1.1"
+local version = "0.1.2"
 
 local ansi = "\27["
 local dred = "\27[0;31m"
@@ -181,11 +181,11 @@ function resetTrackerCP()
     token:setBuffer(buffer)
     --]]
   else
-    Note("Firing the else.\n")
+    --Note("Firing the else.\n")
     SendToServer("campaign check")
   end -- PluginSupports
-  --[[
-  DeleteTriggerGroup("mobs")
+  ---[[
+  DeleteTriggerGroup("hl_mobs")
   --]]
 	EnableTrigger("grabberCP",true)
 	EnableTrigger("end1",true)
@@ -225,10 +225,10 @@ function endCaptureCP(name,line,map)
       if(mob:find("^a ") or mob:find("^an ") or mob:find("^the ")) then
         mob = mob:gsub("^%l", string.upper)
       end
-      NewTrigger(format(name,count),
+      NewTrigger(format(name, count),
       mob,
-      {regexp=false,group="mobs",enabled=true},
-      {type="color",background=18,foreground=247,fire="always"})
+      {regexp=false, group="hl_mobs"},
+      {type="color", background=18, foreground=247, fire="always"})
       count = count + 1
     end
   end -- create trigger loop
@@ -262,6 +262,7 @@ function goto_campaign_area(areanumber)
     for i, mob in ipairs(list) do
       Note(string.format("%s - %s%s%s\n", i, dgreen, mob, dwhite))
       CP_Mobs_In_Area = i
+      if i == 1 then SendToServer(".TARGET "..stripname(mob)) end
     end
     if AreaData[5] == "" then
       SendToServer("rt "..AreaData[1])
@@ -311,7 +312,7 @@ function set_campaign_area_target(targetnumber)
   elseif (TNumber > 0) and (TNumber < CP_Mobs_In_Area + 1) then
     SendToServer(string.format(".TARGET %s",stripname(list[TNumber],Current_CP_Area_Name)))
     Note(string.format("Setting TARGET to %s%s%s",dgreen, stripname(list[TNumber],Current_CP_Area_Name), dwhite))
-    SendToServer(string.format(".ht %s",stripname(list[TNumber],Current_CP_Area_Name)))
+    SendToServer(string.format("ht %s",stripname(list[TNumber],Current_CP_Area_Name)))
   elseif (TNumber < 1) or (TNumber > CP_Mobs_In_Area ) then
     Note(string.format("Please use a number between 1 and %s.\n", CP_Mobs_In_Area))
   end
@@ -326,7 +327,7 @@ RegisterSpecialCommand("CPRGoto","goto_campaign_room")
 
 function OnBackgroundStartup()
   Note(string.format("%sShindo's %sQuest & Campaign helper%s version: %s\n", bgreen, dgreen, dblue, version, dwhite))
-  DeleteTriggerGroup("mobs")
+  DeleteTriggerGroup("hl_mobs")
   EnableTrigger("end1",false)
   EnableTrigger("end2",false)
   EnableTrigger("end3",false)
